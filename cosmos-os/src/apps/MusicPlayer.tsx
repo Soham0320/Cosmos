@@ -30,6 +30,13 @@ const TRACKS: Track[] = [
     color: '#69f0ae',
     emoji: '🌠',
   },
+  {
+    title: 'EYE OF THE TIGER',
+    artist: 'SURVIVOR',
+    url: '/music/song4.mp3',
+    color: '#ff9800',
+    emoji: '🐅',
+  },
 ];
 
 export const MusicPlayer: React.FC = () => {

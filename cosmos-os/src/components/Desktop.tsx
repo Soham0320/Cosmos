@@ -260,6 +260,17 @@ const Desktop: React.FC = () => {
     >
       <SystemBar onOpenSearch={() => { setShowSearch(true); setSearchQuery(''); setSelectedSearchIdx(0); }} />
 
+      {/* Permanent Desktop Search Bar */}
+      <div className="absolute top-16 left-1/2 -translate-x-1/2 w-full max-w-md z-10">
+        <div 
+          className="flex items-center px-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-xl cursor-text hover:bg-white/15 transition-colors"
+          onClick={() => { setShowSearch(true); setSearchQuery(''); setSelectedSearchIdx(0); }}
+        >
+          <span className="text-lg opacity-60 mr-3">🔍</span>
+          <span className="text-white/60 text-sm font-medium">Search apps, widgets, and more...</span>
+        </div>
+      </div>
+
       {/* Desktop Icons */}
       <div className="absolute top-12 left-4 flex flex-col gap-2 z-10">
         {icons.map(icon => (
