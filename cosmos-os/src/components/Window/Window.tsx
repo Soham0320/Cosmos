@@ -41,7 +41,7 @@ export const Window: React.FC<WindowProps> = ({ id, title, children, isActive, z
     setPos({ x: dragStart.current.px + dx, y: dragStart.current.py + dy });
   }, []);
 
-  const onTitlePointerUp = useCallback((e: React.PointerEvent) => {
+  const onTitlePointerUp = useCallback(() => {
     if (!dragStart.current) return;
     dragStart.current = null;
     // Edge snapping

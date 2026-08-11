@@ -2,10 +2,6 @@ import React, { useState, useRef, KeyboardEvent } from 'react';
 
 // ─── Built-in "Sites" ────────────────────────────────────────────────────────
 
-interface InternalPage {
-  title: string;
-  render: () => React.ReactNode;
-}
 
 const CosmosHome: React.FC = () => {
   const [q, setQ] = useState('');

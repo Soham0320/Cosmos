@@ -30,7 +30,7 @@ const initialNote = makeNote('Welcome', 'Welcome to Cosmos OS Notes!\n\nStart ty
 
 export const useNotesStore = create<NotesState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       notes: [initialNote],
       activeNoteId: initialNote.id,
 

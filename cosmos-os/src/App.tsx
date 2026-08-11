@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSettingsStore } from './store/settingsStore';
 import Desktop from './components/Desktop';
 
