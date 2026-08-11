@@ -96,10 +96,10 @@ export const Window: React.FC<WindowProps> = ({ id, title, children, isActive, z
   const handleMinimize = () => minimizeWindow(id);
 
   const resizeHandles = [
-    { dir: 'n',  cursor: 'cursor-n-resize',  className: 'absolute top-0 left-2 right-2 h-1.5' },
-    { dir: 's',  cursor: 'cursor-s-resize',  className: 'absolute bottom-0 left-2 right-2 h-1.5' },
-    { dir: 'e',  cursor: 'cursor-e-resize',  className: 'absolute right-0 top-2 bottom-2 w-1.5' },
-    { dir: 'w',  cursor: 'cursor-w-resize',  className: 'absolute left-0 top-2 bottom-2 w-1.5' },
+    { dir: 'n', cursor: 'cursor-n-resize', className: 'absolute top-0 left-2 right-2 h-1.5' },
+    { dir: 's', cursor: 'cursor-s-resize', className: 'absolute bottom-0 left-2 right-2 h-1.5' },
+    { dir: 'e', cursor: 'cursor-e-resize', className: 'absolute right-0 top-2 bottom-2 w-1.5' },
+    { dir: 'w', cursor: 'cursor-w-resize', className: 'absolute left-0 top-2 bottom-2 w-1.5' },
     { dir: 'nw', cursor: 'cursor-nw-resize', className: 'absolute top-0 left-0 w-3 h-3' },
     { dir: 'ne', cursor: 'cursor-ne-resize', className: 'absolute top-0 right-0 w-3 h-3' },
     { dir: 'sw', cursor: 'cursor-sw-resize', className: 'absolute bottom-0 left-0 w-3 h-3' },
@@ -117,7 +117,7 @@ export const Window: React.FC<WindowProps> = ({ id, title, children, isActive, z
           transition={{ type: 'spring', stiffness: 300, damping: 28 }}
           onPointerDown={() => focusWindow(id)}
           onPointerMove={(e) => { onTitlePointerMove(e); onResizePointerMove(e); }}
-          onPointerUp={(e) => { onTitlePointerUp(e); onResizePointerUp(); }}
+          onPointerUp={() => { onTitlePointerUp(); onResizePointerUp(); }}
           className={`absolute flex flex-col`}
           style={
             maximized
