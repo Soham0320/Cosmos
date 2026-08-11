@@ -22,6 +22,7 @@ const ALL_ICONS: DesktopIcon[] = [
   { id: 'gallery',       label: 'Gallery',    icon: '🖼️' },
   { id: 'calculator',    label: 'Calculator', icon: '🔢' },
   { id: 'calendar',      label: 'Calendar',   icon: '📅' },
+  { id: 'aichat',        label: 'COSMOS AI',  icon: '🤖' },
 ];
 
 interface ContextMenu {
@@ -49,7 +50,7 @@ interface SearchItem {
 
 const Desktop: React.FC = () => {
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
-  const [visibleIcons, setVisibleIcons] = useState<string[]>(ALL_ICONS.map(i => i.id));
+  const [visibleIcons, setVisibleIcons] = useState<string[]>(['aichat']);
   const [contextMenu, setContextMenu] = useState<ContextMenu | null>(null);
   const [showAddMenu, setShowAddMenu] = useState(false);
   const [showWidgetPicker, setShowWidgetPicker] = useState(false);
@@ -64,11 +65,12 @@ const Desktop: React.FC = () => {
   const { openWindow } = useWindowStore();
   const contextRef = useRef<HTMLDivElement>(null);
 
-  // Widget state — initialize with all 3 widgets placed on the right side
+  // Widget state — initialize with widgets placed on the right side
   const [widgets, setWidgets] = useState<WidgetInstance[]>([
     { id: 'clock-1',    type: 'clock',    x: window.innerWidth - 240, y: 50,  w: 200, h: 220 },
     { id: 'calendar-1', type: 'calendar', x: window.innerWidth - 240, y: 290, w: 200, h: 250 },
     { id: 'weather-1',  type: 'weather',  x: window.innerWidth - 260, y: 560, w: 220, h: 240 },
+    { id: 'aichat-1',   type: 'aichat',   x: 40, y: 120, w: 320, h: 450 },
   ]);
 
   const activeWallpaper = defaultWallpapers.find(w => w.id === wallpaper) ?? defaultWallpapers[0];
@@ -116,6 +118,16 @@ const Desktop: React.FC = () => {
         addWidget('weather');
         setShowSearch(false);
       }
+    },
+    {
+      id: 'widget-aichat',
+      label: 'Add AI Chatbot Widget',
+      icon: '🤖',
+      category: 'Widget Action' as const,
+      action: () => {
+        addWidget('aichat');
+        setShowSearch(false);
+      }
     }
   ];
 
@@ -139,7 +151,7 @@ const Desktop: React.FC = () => {
     return () => window.removeEventListener('mousedown', handler);
   }, [contextMenu, showAddMenu, showWidgetPicker]);
 
-  // Global hotkey for Spotlight search (Ctrl+Space)
+  // Global hotkeys
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.code === 'Space') {
@@ -147,11 +159,23 @@ const Desktop: React.FC = () => {
         setShowSearch(prev => !prev);
         setSearchQuery('');
         setSelectedSearchIdx(0);
+      } else if (e.altKey && e.code === 'KeyT') {
+        e.preventDefault();
+        openWindow('terminal');
+      } else if (e.altKey && e.code === 'KeyS') {
+        e.preventDefault();
+        openWindow('settings');
+      } else if (e.altKey && e.code === 'KeyF') {
+        e.preventDefault();
+        openWindow('file-explorer');
+      } else if (e.altKey && e.code === 'KeyM') {
+        e.preventDefault();
+        openWindow('music');
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [openWindow]);
 
   // Autofocus search input when opened
   useEffect(() => {

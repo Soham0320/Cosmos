@@ -18,7 +18,7 @@ function App() {
   }, [theme, accentColor]);
 
   return (
-    <div className="w-screen h-screen overflow-hidden">
+    <div className="absolute inset-0 overflow-hidden">
       <Desktop />
     </div>
   );

@@ -3,10 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CalendarWidget } from './CalendarWidget';
 import { ClockWidget } from './ClockWidget';
 import { WeatherWidget } from './WeatherWidget';
+import { AIChatWidget } from './AIChatWidget';
 
 export interface WidgetConfig {
   id: string;
-  type: 'calendar' | 'clock' | 'weather';
+  type: 'calendar' | 'clock' | 'weather' | 'aichat';
   label: string;
   icon: string;
   defaultW: number;
@@ -17,6 +18,7 @@ export const AVAILABLE_WIDGETS: WidgetConfig[] = [
   { id: 'clock',    type: 'clock',    label: 'Clock',    icon: '🕐', defaultW: 200, defaultH: 220 },
   { id: 'calendar', type: 'calendar', label: 'Calendar', icon: '📅', defaultW: 200, defaultH: 250 },
   { id: 'weather',  type: 'weather',  label: 'Weather',  icon: '🌤️', defaultW: 220, defaultH: 240 },
+  { id: 'aichat',   type: 'aichat',   label: 'AI Chatbot', icon: '🤖', defaultW: 300, defaultH: 400 },
 ];
 
 interface WidgetInstance {
@@ -32,6 +34,7 @@ const WIDGET_COMPONENTS: Record<string, React.FC> = {
   calendar: CalendarWidget,
   clock: ClockWidget,
   weather: WeatherWidget,
+  aichat: AIChatWidget,
 };
 
 interface DesktopWidgetsProps {

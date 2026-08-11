@@ -12,6 +12,7 @@ import { Terminal }     from '../../apps/Terminal';
 import { Browser }      from '../../apps/Browser';
 import { Gallery }      from '../../apps/Gallery';
 import { CalendarApp }  from '../../apps/CalendarApp';
+import { AIChatApp }    from '../../apps/AIChatApp';
 
 const APP_COMPONENTS: Record<string, React.FC> = {
   'file-explorer': FileExplorer,
@@ -23,6 +24,7 @@ const APP_COMPONENTS: Record<string, React.FC> = {
   'browser':       Browser,
   'gallery':       Gallery,
   'calendar':      CalendarApp,
+  'aichat':        AIChatApp,
 };
 
 export const WindowManager: React.FC = () => {
