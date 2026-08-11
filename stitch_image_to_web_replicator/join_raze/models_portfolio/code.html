@@ -1,0 +1,256 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>RAZE - Models</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;family=Sora:wght@100..800&amp;family=Space+Grotesk:wght@300..700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#e5e2e1",
+                        "primary-container": "#bd00ff",
+                        "on-tertiary": "#313030",
+                        "surface-container-low": "#1c1b1b",
+                        "surface-container-highest": "#353534",
+                        "error": "#ffb4ab",
+                        "outline-variant": "#514255",
+                        "tertiary": "#c8c6c5",
+                        "on-error": "#690005",
+                        "primary": "#ecb2ff",
+                        "surface-bright": "#3a3939",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "outline": "#9d8ba0",
+                        "on-primary-fixed": "#320047",
+                        "on-tertiary-fixed-variant": "#474746",
+                        "inverse-on-surface": "#313030",
+                        "on-surface": "#e5e2e1",
+                        "secondary-fixed": "#e2e2e2",
+                        "surface-container-high": "#2a2a2a",
+                        "surface-variant": "#353534",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-container": "#777676",
+                        "primary-fixed-dim": "#ecb2ff",
+                        "surface": "#131313",
+                        "on-background": "#e5e2e1",
+                        "on-tertiary-container": "#ffffff",
+                        "secondary-container": "#454747",
+                        "secondary": "#c6c6c7",
+                        "surface-dim": "#131313",
+                        "on-primary": "#520071",
+                        "on-secondary": "#2f3131",
+                        "on-primary-container": "#ffffff",
+                        "on-secondary-container": "#b4b5b5",
+                        "tertiary-fixed": "#e5e2e1",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "on-surface-variant": "#d4c0d7",
+                        "surface-tint": "#ecb2ff",
+                        "background": "#131313",
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-primary-fixed-variant": "#74009f",
+                        "error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#454747",
+                        "primary-fixed": "#f8d8ff",
+                        "tertiary-fixed-dim": "#c8c6c5",
+                        "inverse-primary": "#9900cf",
+                        "surface-container": "#201f1f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "grid-gutter": "1.5rem",
+                        "stack-lg": "3rem",
+                        "stack-sm": "0.5rem",
+                        "grid-margin": "4rem",
+                        "stack-md": "1.5rem",
+                        "section-padding": "8rem"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Sora"],
+                        "headline-xl": ["Sora"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "display-lg": ["Sora"],
+                        "label-caps": ["Space Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg-mobile": ["Sora"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "500" }],
+                        "headline-xl": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "display-lg": ["84px", { "lineHeight": "92px", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.15em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg-mobile": ["48px", { "lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #131313;
+            color: #e5e2e1;
+            overflow-x: hidden;
+        }
+        
+        .bg-grid {
+            background-size: 100px 100px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        }
+
+        .glow-button {
+            transition: all 0.3s ease;
+        }
+        .glow-button:hover {
+            box-shadow: 0 0 20px rgba(189, 0, 255, 0.3);
+            border-color: rgba(189, 0, 255, 0.5);
+        }
+
+        .model-card:hover .model-overlay {
+            opacity: 1;
+        }
+        
+        .model-card:hover img {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="min-h-screen relative flex flex-col font-body-md text-body-md bg-grid">
+<!-- Top Navigation (Web) -->
+<header class="hidden md:flex justify-between items-center w-full px-6 py-4 fixed top-0 left-0 z-50 bg-surface/30 dark:bg-surface/30 backdrop-blur-xl border-b border-white/10">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary dark:text-primary scale-95 active:opacity-80 transition-all cursor-pointer">menu</span>
+<div class="font-headline-xl text-headline-xl-mobile tracking-tighter text-on-surface dark:text-on-surface ml-4">RAZE</div>
+</div>
+<nav class="flex gap-8">
+<a class="text-on-surface-variant dark:text-on-surface-variant font-label-caps text-label-caps hover:text-primary transition-colors duration-300" href="#">HOME</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-label-caps text-label-caps hover:text-primary transition-colors duration-300" href="#">ABOUT</a>
+<a class="text-primary font-bold font-label-caps text-label-caps" href="#">MODELS</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-label-caps text-label-caps hover:text-primary transition-colors duration-300" href="#">SERVICES</a>
+</nav>
+<button class="font-label-caps text-label-caps border border-white/20 rounded-full px-6 py-2 hover:text-primary transition-colors duration-300 glow-button flex items-center gap-2">
+            Become a Member
+            <span class="material-symbols-outlined text-[16px]">person</span>
+</button>
+</header>
+<!-- Top Navigation (Mobile) -->
+<header class="md:hidden flex justify-between items-center w-full px-6 py-4 fixed top-0 left-0 z-50 bg-surface/30 dark:bg-surface/30 backdrop-blur-xl border-b border-white/10">
+<div class="font-headline-xl text-headline-xl-mobile tracking-tighter text-on-surface dark:text-on-surface">RAZE</div>
+<span class="material-symbols-outlined text-primary dark:text-primary scale-95 active:opacity-80 transition-all cursor-pointer">menu</span>
+</header>
+<main class="flex-grow pt-32 pb-32 px-6 md:px-16 w-full max-w-[1600px] mx-auto z-10 relative">
+<!-- Header Section -->
+<div class="mb-16 flex flex-col md:flex-row justify-between items-end gap-8">
+<div>
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-4">
+                    Our <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary-container">Faces</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl">
+                    Discover the raw talent and diverse beauty redefining the runway. Our curated roster of models breaks boundaries and shapes the future of fashion.
+                </p>
+</div>
+<!-- Filters -->
+<div class="flex flex-wrap gap-4 font-label-caps text-label-caps">
+<button class="px-6 py-2 rounded-full bg-primary-container text-on-primary-container glow-button">ALL</button>
+<button class="px-6 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors glow-button">NEW FACES</button>
+<button class="px-6 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors glow-button">EDITORIAL</button>
+<button class="px-6 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors glow-button">COMMERCIAL</button>
+</div>
+</div>
+<!-- Models Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<!-- Model Card 1 -->
+<div class="model-card group relative rounded-lg overflow-hidden border border-white/5 bg-surface-container-low aspect-[3/4] cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-700 ease-out" data-alt="A striking portrait of a futuristic fashion model bathed in neon purple and soft white lighting. The background is pitch black with subtle glowing dust motes. The model has sharp, angular features and wears avant-garde, minimalist dark clothing. High fashion aesthetic, extremely detailed, cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2aTsiUdINWwF0OcW4FU-bG1d89qTX_cvKLGL403DKRW8qXLkEM9mnRvrjSm8YIMuCO3uvzFIN4rGE2wB_Bm8sgxQV7dwG1hhH6MIHx6-zs1RxmRObzNIFLHv_-RCdyah_aB4mfXUbyFTwf2A9m0cQKrFBrrXwKGEfzOddbT9bn5DRmQGLiqxI6XifVXy5FSTp5sV6yjbXmQjuQ6XkV5DGPqk51P3RtQVKmMoX9cnC2bWoEnhTASku">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 flex flex-col justify-end model-overlay opacity-80 md:opacity-0 transition-opacity duration-300">
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-1">Elara Vance</h3>
+<p class="font-label-caps text-label-caps text-primary tracking-widest">EDITORIAL / NEW FACE</p>
+</div>
+</div>
+<!-- Model Card 2 -->
+<div class="model-card group relative rounded-lg overflow-hidden border border-white/5 bg-surface-container-low aspect-[3/4] cursor-pointer md:mt-12">
+<img class="w-full h-full object-cover transition-transform duration-700 ease-out" data-alt="A striking portrait of a futuristic fashion model bathed in neon purple and soft white lighting. The background is pitch black with subtle glowing dust motes. The model has sharp, angular features and wears avant-garde, minimalist dark clothing. High fashion aesthetic, extremely detailed, cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdgbSjc4lX89De0ArA9CIqI81b6GY5Rgdj7hq6A3BrD09L785jiLh1MdAhMfP2KgkjB_9jhabKZE96xuNHgLKyAJWTNFWMMANdWHM-1UOsbrbR0QmD4gXnAYXp2ZKQ8Db4HlYH8RrxxHVgVD8E0FhiN6UmbXoOloGL9qN6hIYI2OahIRu5dOGlGKgjzuhS-4qPpH8ue4kpuRqQ-YcJKQNdnobNVW7TIimGmEL2RWQUkIVnm8O9zTAM">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 flex flex-col justify-end model-overlay opacity-80 md:opacity-0 transition-opacity duration-300">
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-1">Kaelen Thorne</h3>
+<p class="font-label-caps text-label-caps text-primary tracking-widest">COMMERCIAL</p>
+</div>
+</div>
+<!-- Model Card 3 -->
+<div class="model-card group relative rounded-lg overflow-hidden border border-white/5 bg-surface-container-low aspect-[3/4] cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-700 ease-out" data-alt="A striking portrait of a futuristic fashion model bathed in neon purple and soft white lighting. The background is pitch black with subtle glowing dust motes. The model has sharp, angular features and wears avant-garde, minimalist dark clothing. High fashion aesthetic, extremely detailed, cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGlWAsm9pdnepHORad32yadjxlSUbGmt3DbinhzRBWdOnx4E29E4H_BU9DbwiGtK7Kn-TWe5L0FUGRNutGpWBuiF6ROVIEYeXdu2XUlMMUJElB1D7qyyWjfCeOXvKJc7QPMelq5UJdnBJdMFXbf-9L3UMliwcc3iDZlWM5ZyHU7OCDq9ec_UgvF0EXM3vaRux-xu6abN0T8slr-DY4ROzGOaaGfteSqC0WfLXWmfHreui8YbFYJzU3">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 flex flex-col justify-end model-overlay opacity-80 md:opacity-0 transition-opacity duration-300">
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-1">Nyx Sterling</h3>
+<p class="font-label-caps text-label-caps text-primary tracking-widest">EDITORIAL</p>
+</div>
+</div>
+<!-- Model Card 4 -->
+<div class="model-card group relative rounded-lg overflow-hidden border border-white/5 bg-surface-container-low aspect-[3/4] cursor-pointer md:mt-12">
+<img class="w-full h-full object-cover transition-transform duration-700 ease-out" data-alt="A striking portrait of a futuristic fashion model bathed in neon purple and soft white lighting. The background is pitch black with subtle glowing dust motes. The model has sharp, angular features and wears avant-garde, minimalist dark clothing. High fashion aesthetic, extremely detailed, cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuATTRiHnE7zEMx2s7qLc7yumroS7XhsUe7N0MhGuSVOorTgtZAOflc3FzKoy2o4Rs-zeKo0oKkne7MQZWejUPGoo88nYXWp2cxf2WiMM56xqXnow_fW-O_WzT9mYHkMIV8Zau1j0WUo-O9X9PRtC83PqmdzGFxTNT27EAHUt-mZWk6W17a1rCNhEzcmeW2LwbDutW6eESIadvD0YdB9Xh0pc3WlN1Ao6of63qYO4vaZdZNLO1HWyR7r">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 flex flex-col justify-end model-overlay opacity-80 md:opacity-0 transition-opacity duration-300">
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-1">Jaxon Reid</h3>
+<p class="font-label-caps text-label-caps text-primary tracking-widest">NEW FACE</p>
+</div>
+</div>
+<!-- Model Card 5 -->
+<div class="model-card group relative rounded-lg overflow-hidden border border-white/5 bg-surface-container-low aspect-[3/4] cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-700 ease-out" data-alt="A striking portrait of a futuristic fashion model bathed in neon purple and soft white lighting. The background is pitch black with subtle glowing dust motes. The model has sharp, angular features and wears avant-garde, minimalist dark clothing. High fashion aesthetic, extremely detailed, cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKigpAVhCZBVy7TZr_wxSZzW6EoWLOXxYSOr3FudKCO8F-G-24pl2ZawTdKFIFkcZYgVqWUHZH94R6hqV-_Re81JPEy4m64CXzaW_PD1z1vnMJzyDMKMpmauy0JxDSBXraL_Cgslk7Ib8_isKwgV86ei3aDLgTF9XTJjKn_lw3Y6eAoPG1YkC75AIWNcWge96ZsMbAnBKxYVZ0y36swQmu5g653Scg7fUdLlr1JaaS-Pl4JIKcbjn7">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 flex flex-col justify-end model-overlay opacity-80 md:opacity-0 transition-opacity duration-300">
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-1">Lyra Nova</h3>
+<p class="font-label-caps text-label-caps text-primary tracking-widest">EDITORIAL</p>
+</div>
+</div>
+<!-- Model Card 6 -->
+<div class="model-card group relative rounded-lg overflow-hidden border border-white/5 bg-surface-container-low aspect-[3/4] cursor-pointer md:mt-12">
+<img class="w-full h-full object-cover transition-transform duration-700 ease-out" data-alt="A striking portrait of a futuristic fashion model bathed in neon purple and soft white lighting. The background is pitch black with subtle glowing dust motes. The model has sharp, angular features and wears avant-garde, minimalist dark clothing. High fashion aesthetic, extremely detailed, cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwBM8xiT7EGR9oroxdKfWG222Je_bEq6wVUw_qbTypZcr13-OdHAgqhkikFx8ulmpNfNRMsFwbf5uXItw69zjf1ce40ag9nrT1KvmO-vYNo0BLeoWC6tqjIQc4eXQ7M6485vmmqdCBRMdjUStVyRpBP-WLzGWmuLYlcag6C5WWqtRtJPVEFSaiizq04-FvdPU4z6hdEOUFUoxqdBybwlwxikgTYPUN0jHBaJcFdKvAQXVg0p_egguJ">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 flex flex-col justify-end model-overlay opacity-80 md:opacity-0 transition-opacity duration-300">
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-1">Orion Dax</h3>
+<p class="font-label-caps text-label-caps text-primary tracking-widest">COMMERCIAL</p>
+</div>
+</div>
+</div>
+<div class="mt-16 text-center">
+<button class="font-label-caps text-label-caps border border-white/20 rounded-full px-8 py-3 hover:text-primary hover:border-primary transition-all duration-300 glow-button">
+                Load More Faces
+            </button>
+</div>
+</main>
+<!-- Bottom Navigation (Mobile) -->
+<nav class="md:hidden flex justify-around items-center py-2 px-4 fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] rounded-full bg-surface/40 dark:bg-surface/40 backdrop-blur-2xl border border-white/10 shadow-[0_0_20px_rgba(236,178,255,0.2)] z-50">
+<a class="text-on-surface-variant p-3 flex flex-col items-center gap-1 hover:scale-110 transition-transform" href="#">
+<span class="material-symbols-outlined text-[24px]">home</span>
+</a>
+<a class="text-on-surface-variant p-3 flex flex-col items-center gap-1 hover:scale-110 transition-transform" href="#">
+<span class="material-symbols-outlined text-[24px]">explore</span>
+</a>
+<a class="bg-primary-container text-on-primary-container rounded-full p-3 flex flex-col items-center gap-1 scale-90 duration-150" href="#">
+<span class="material-symbols-outlined text-[24px]">public</span>
+</a>
+<a class="text-on-surface-variant p-3 flex flex-col items-center gap-1 hover:scale-110 transition-transform" href="#">
+<span class="material-symbols-outlined text-[24px]">person</span>
+</a>
+</nav>
+<!-- Footer -->
+<footer class="w-full py-12 px-8 border-t border-white/5 bg-background dark:bg-background flex flex-col items-center gap-6 text-center z-10 relative mt-auto">
+<div class="font-headline-lg text-on-surface">RAZE</div>
+<div class="flex gap-6 font-label-caps text-label-caps">
+<a class="text-on-surface-variant hover:text-primary underline decoration-primary/30 opacity-100 hover:opacity-80 transition-all" href="#">Privacy</a>
+<a class="text-on-surface-variant hover:text-primary underline decoration-primary/30 opacity-100 hover:opacity-80 transition-all" href="#">Terms</a>
+<a class="text-on-surface-variant hover:text-primary underline decoration-primary/30 opacity-100 hover:opacity-80 transition-all" href="#">Contact</a>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-4">© 2024 RAZE AGENCY. ALL RIGHTS RESERVED.</p>
+</footer>
+</body></html>

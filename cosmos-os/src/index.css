@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: #00e5ff;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    @apply bg-background text-white overflow-hidden m-0 p-0;
+    selection-color: var(--color-primary);
+  }
+
+  /* Light theme overrides */
+  html.theme-light body {
+    background: #f0f2f8;
+    color: #1a1a2e;
+  }
+  html.theme-light .glass-panel {
+    background: rgba(255,255,255,0.7) !important;
+    border-color: rgba(0,0,0,0.08) !important;
+  }
+  html.theme-light .bg-panel {
+    background: rgba(240,242,248,0.8) !important;
+  }
+  html.theme-light .bg-background {
+    background: #f0f2f8 !important;
+  }
+  html.theme-light .text-white {
+    color: #1a1a2e !important;
+  }
+  html.theme-light .text-white\/80 { color: rgba(26,26,46,0.8) !important; }
+  html.theme-light .text-white\/60 { color: rgba(26,26,46,0.6) !important; }
+  html.theme-light .text-white\/40 { color: rgba(26,26,46,0.4) !important; }
+  html.theme-light .bg-black\/40 { background: rgba(255,255,255,0.6) !important; }
+  html.theme-light .border-white\/10 { border-color: rgba(0,0,0,0.1) !important; }
+  html.theme-light .hover\:bg-white\/10:hover { background: rgba(0,0,0,0.05) !important; }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-panel backdrop-blur-xl border border-panel-border shadow-2xl rounded-2xl;
+  }
+
+  .glass-panel-light {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 rounded-xl;
+  }
+
+  /* Accent-color aware primary class via CSS var */
+  .text-primary  { color: var(--color-primary) !important; }
+  .bg-primary    { background: var(--color-primary) !important; }
+  .border-primary { border-color: var(--color-primary) !important; }
+  .shadow-glow   { box-shadow: 0 0 24px color-mix(in srgb, var(--color-primary) 30%, transparent); }
+}

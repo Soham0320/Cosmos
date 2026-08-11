@@ -1,0 +1,233 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Become a Member - RAZE</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;family=Sora:wght@100..800&amp;family=Space+Grotesk:wght@300..700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#e5e2e1",
+                        "primary-container": "#bd00ff",
+                        "on-tertiary": "#313030",
+                        "surface-container-low": "#1c1b1b",
+                        "surface-container-highest": "#353534",
+                        "error": "#ffb4ab",
+                        "outline-variant": "#514255",
+                        "tertiary": "#c8c6c5",
+                        "on-error": "#690005",
+                        "primary": "#ecb2ff",
+                        "surface-bright": "#3a3939",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "outline": "#9d8ba0",
+                        "on-primary-fixed": "#320047",
+                        "on-tertiary-fixed-variant": "#474746",
+                        "inverse-on-surface": "#313030",
+                        "on-surface": "#e5e2e1",
+                        "secondary-fixed": "#e2e2e2",
+                        "surface-container-high": "#2a2a2a",
+                        "surface-variant": "#353534",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-container": "#777676",
+                        "primary-fixed-dim": "#ecb2ff",
+                        "surface": "#131313",
+                        "on-background": "#e5e2e1",
+                        "on-tertiary-container": "#ffffff",
+                        "secondary-container": "#454747",
+                        "secondary": "#c6c6c7",
+                        "surface-dim": "#131313",
+                        "on-primary": "#520071",
+                        "on-secondary": "#2f3131",
+                        "on-primary-container": "#ffffff",
+                        "on-secondary-container": "#b4b5b5",
+                        "tertiary-fixed": "#e5e2e1",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "on-surface-variant": "#d4c0d7",
+                        "surface-tint": "#ecb2ff",
+                        "background": "#131313",
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-primary-fixed-variant": "#74009f",
+                        "error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#454747",
+                        "primary-fixed": "#f8d8ff",
+                        "tertiary-fixed-dim": "#c8c6c5",
+                        "inverse-primary": "#9900cf",
+                        "surface-container": "#201f1f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "grid-gutter": "1.5rem",
+                        "stack-lg": "3rem",
+                        "stack-sm": "0.5rem",
+                        "grid-margin": "4rem",
+                        "stack-md": "1.5rem",
+                        "section-padding": "8rem"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Sora"],
+                        "headline-xl": ["Sora"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "display-lg": ["Sora"],
+                        "label-caps": ["Space Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg-mobile": ["Sora"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "500" }],
+                        "headline-xl": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "display-lg": ["84px", { "lineHeight": "92px", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.15em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg-mobile": ["48px", { "lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 8.33% 100vh; /* Approximate 12 column grid */
+            background-position: center top;
+        }
+        
+        .glow-button {
+            box-shadow: 0 0 20px rgba(189, 0, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .glow-button:hover {
+            box-shadow: 0 0 30px rgba(189, 0, 255, 0.5);
+            background-color: theme('colors.primary-container');
+            color: theme('colors.on-primary-container');
+        }
+
+        .input-line {
+            border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            background: transparent;
+            border-radius: 0;
+            padding: 1rem 0;
+            transition: border-color 0.3s ease;
+        }
+        .input-line:focus {
+            outline: none;
+            border-bottom-color: theme('colors.primary');
+            box-shadow: none;
+        }
+        
+        /* Thin vertical rule for the grid lines */
+        .grid-line-left {
+            position: absolute;
+            left: 25%;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: rgba(255,255,255,0.05);
+            z-index: -1;
+        }
+        .grid-line-right {
+            position: absolute;
+            right: 25%;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: rgba(255,255,255,0.05);
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative overflow-x-hidden">
+<!-- Grid Lines -->
+<div class="grid-line-left hidden md:block"></div>
+<div class="grid-line-right hidden md:block"></div>
+<!-- TopAppBar (Transactional - Hidden or Minimal, but instructions say to generate if not transactional. This is an application, so it's a focused journey. Suppressing nav links, keeping brand.) -->
+<header class="w-full flex justify-between items-center px-6 py-6 fixed top-0 z-50 bg-background/50 backdrop-blur-xl border-b border-white/5">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface hover:text-primary transition-colors cursor-pointer" onclick="history.back()">arrow_back</span>
+<div class="font-headline-xl text-headline-xl-mobile md:text-headline-xl tracking-tighter text-on-surface">RAZE</div>
+</div>
+<div>
+<!-- Close action indicating temporary departure -->
+<span class="material-symbols-outlined text-on-surface hover:text-primary transition-colors cursor-pointer" onclick="history.back()">close</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex items-center justify-center pt-32 pb-section-padding px-6 md:px-grid-margin relative z-10">
+<!-- Abstract Background Element -->
+<div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[100px] -z-10 mix-blend-screen pointer-events-none"></div>
+<div class="w-full max-w-2xl bg-surface-container/30 backdrop-blur-2xl p-8 md:p-12 rounded-xl border border-white/10 relative overflow-hidden">
+<!-- Subtle gradient border effect -->
+<div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-50 pointer-events-none"></div>
+<div class="relative z-10">
+<div class="mb-stack-lg text-center md:text-left">
+<h1 class="font-display-lg-mobile md:font-headline-xl text-display-lg-mobile md:text-headline-xl text-on-surface mb-4 font-bold tracking-tighter">Join The Vanguard</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg">We redefine standards. Submit your details to be considered for representation.</p>
+</div>
+<form class="space-y-stack-md">
+<!-- Name Input -->
+<div class="relative">
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2 uppercase tracking-widest" for="fullName">Full Name</label>
+<input class="input-line w-full font-body-lg text-body-lg text-on-surface placeholder-on-surface-variant/50 focus:ring-0" id="fullName" placeholder="e.g. Aria Vance" type="text">
+</div>
+<!-- Portfolio Input -->
+<div class="relative">
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2 uppercase tracking-widest" for="portfolio">Portfolio Link</label>
+<input class="input-line w-full font-body-lg text-body-lg text-on-surface placeholder-on-surface-variant/50 focus:ring-0" id="portfolio" placeholder="https://..." type="url">
+</div>
+<!-- Measurements Grid -->
+<div class="pt-4">
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-6 uppercase tracking-widest">Measurements (cm)</label>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+<div>
+<input class="input-line w-full font-body-lg text-body-lg text-on-surface placeholder-on-surface-variant/50 text-center focus:ring-0" id="height" placeholder="Height" type="number">
+</div>
+<div>
+<input class="input-line w-full font-body-lg text-body-lg text-on-surface placeholder-on-surface-variant/50 text-center focus:ring-0" id="bust" placeholder="Bust" type="number">
+</div>
+<div>
+<input class="input-line w-full font-body-lg text-body-lg text-on-surface placeholder-on-surface-variant/50 text-center focus:ring-0" id="waist" placeholder="Waist" type="number">
+</div>
+<div>
+<input class="input-line w-full font-body-lg text-body-lg text-on-surface placeholder-on-surface-variant/50 text-center focus:ring-0" id="hips" placeholder="Hips" type="number">
+</div>
+</div>
+</div>
+<!-- Social / Optional -->
+<div class="relative pt-4">
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-2 uppercase tracking-widest" for="social">Instagram Handle</label>
+<input class="input-line w-full font-body-lg text-body-lg text-on-surface placeholder-on-surface-variant/50 focus:ring-0" id="social" placeholder="@username" type="text">
+</div>
+<!-- Submit Action -->
+<div class="pt-stack-lg flex justify-end">
+<button class="glow-button flex items-center gap-3 bg-surface/50 backdrop-blur-md border border-white/20 text-on-surface py-4 px-8 rounded-full font-label-caps text-label-caps uppercase tracking-widest group" type="submit">
+<span>Submit Application</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+</main>
+<!-- Footer (Minimal for transactional page) -->
+<footer class="w-full py-8 px-6 text-center border-t border-white/5 mt-auto">
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">© 2024 RAZE AGENCY. ALL RIGHTS RESERVED.</p>
+</footer>
+</body></html>

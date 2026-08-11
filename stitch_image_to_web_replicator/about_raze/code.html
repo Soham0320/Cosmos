@@ -1,0 +1,237 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>RAZE - About Us</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&amp;family=Hanken+Grotesk:wght@400;500&amp;family=Space+Grotesk:wght@600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#e5e2e1",
+                        "primary-container": "#bd00ff",
+                        "on-tertiary": "#313030",
+                        "surface-container-low": "#1c1b1b",
+                        "surface-container-highest": "#353534",
+                        "error": "#ffb4ab",
+                        "outline-variant": "#514255",
+                        "tertiary": "#c8c6c5",
+                        "on-error": "#690005",
+                        "primary": "#ecb2ff",
+                        "surface-bright": "#3a3939",
+                        "on-tertiary-fixed": "#1c1b1b",
+                        "outline": "#9d8ba0",
+                        "on-primary-fixed": "#320047",
+                        "on-tertiary-fixed-variant": "#474746",
+                        "inverse-on-surface": "#313030",
+                        "on-surface": "#e5e2e1",
+                        "secondary-fixed": "#e2e2e2",
+                        "surface-container-high": "#2a2a2a",
+                        "surface-variant": "#353534",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-container": "#777676",
+                        "primary-fixed-dim": "#ecb2ff",
+                        "surface": "#131313",
+                        "on-background": "#e5e2e1",
+                        "on-tertiary-container": "#ffffff",
+                        "secondary-container": "#454747",
+                        "secondary": "#c6c6c7",
+                        "surface-dim": "#131313",
+                        "on-primary": "#520071",
+                        "on-secondary": "#2f3131",
+                        "on-primary-container": "#ffffff",
+                        "on-secondary-container": "#b4b5b5",
+                        "tertiary-fixed": "#e5e2e1",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "on-surface-variant": "#d4c0d7",
+                        "surface-tint": "#ecb2ff",
+                        "background": "#131313",
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-primary-fixed-variant": "#74009f",
+                        "error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#454747",
+                        "primary-fixed": "#f8d8ff",
+                        "tertiary-fixed-dim": "#c8c6c5",
+                        "inverse-primary": "#9900cf",
+                        "surface-container": "#201f1f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "grid-gutter": "1.5rem",
+                        "stack-lg": "3rem",
+                        "stack-sm": "0.5rem",
+                        "grid-margin": "4rem",
+                        "stack-md": "1.5rem",
+                        "section-padding": "8rem"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Sora"],
+                        "headline-xl": ["Sora"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "display-lg": ["Sora"],
+                        "label-caps": ["Space Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg-mobile": ["Sora"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "500" }],
+                        "headline-xl": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "display-lg": ["84px", { "lineHeight": "92px", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.15em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg-mobile": ["48px", { "lineHeight": "52px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #131313;
+            color: #e5e2e1;
+            overflow-x: hidden;
+        }
+        .grid-bg {
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: calc((100vw - 8rem) / 12) 100%;
+            background-position: 4rem 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glass-panel {
+            background: rgba(32, 31, 31, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .neon-glow:hover {
+            box-shadow: 0 0 20px rgba(189, 0, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="relative min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+<!-- Grid Guide Overlay -->
+<div class="grid-bg fixed h-full w-full"></div>
+<!-- Top Navigation (Web) -->
+<nav class="hidden md:flex justify-between items-center w-full px-6 py-4 fixed top-0 left-0 w-full z-50 bg-surface/30 dark:bg-surface/30 backdrop-blur-xl border-b border-white/10">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary dark:text-primary cursor-pointer hover:text-primary transition-colors duration-300">menu</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors duration-300 cursor-pointer">Explore</span>
+</div>
+<div class="font-headline-xl text-headline-xl tracking-tighter text-on-surface dark:text-on-surface text-center">
+            RAZE
+        </div>
+<button class="glass-panel border border-white/20 rounded-full px-6 py-2 font-label-caps text-label-caps text-on-surface hover:bg-primary-container hover:text-on-primary-container transition-all duration-300 neon-glow flex items-center gap-2 scale-95 active:opacity-80">
+            Become a Member
+            <span class="material-symbols-outlined text-[16px]">person</span>
+</button>
+</nav>
+<!-- Bottom Navigation (Mobile) -->
+<nav class="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] rounded-full bg-surface/40 dark:bg-surface/40 backdrop-blur-2xl border border-white/10 shadow-[0_0_20px_rgba(236,178,255,0.2)] flex justify-around items-center py-2 px-4 z-50">
+<div class="text-on-surface-variant p-3 hover:scale-110 transition-transform cursor-pointer">
+<span class="material-symbols-outlined">home</span>
+</div>
+<div class="bg-primary-container text-on-primary-container rounded-full p-3 hover:scale-110 transition-transform cursor-pointer active:scale-90 duration-150 shadow-[0_0_15px_rgba(189,0,255,0.4)]">
+<span class="material-symbols-outlined">explore</span>
+</div>
+<div class="text-on-surface-variant p-3 hover:scale-110 transition-transform cursor-pointer">
+<span class="material-symbols-outlined">public</span>
+</div>
+<div class="text-on-surface-variant p-3 hover:scale-110 transition-transform cursor-pointer">
+<span class="material-symbols-outlined">person</span>
+</div>
+</nav>
+<main class="relative z-10 pt-32 pb-section-padding px-grid-margin">
+<!-- Hero Section -->
+<section class="min-h-[80vh] flex flex-col justify-center relative mb-section-padding">
+<!-- Immersive Background -->
+<div class="absolute inset-0 z-[-1] overflow-hidden rounded-3xl opacity-60">
+<div class="bg-cover bg-center w-full h-full object-cover rounded-3xl" data-alt="A futuristic, ethereal portrait of a mysterious figure draped in flowing fabric, emerging from a vibrant, swirling nebula of neon purple and deep magenta smoke. High-fashion aesthetic meets digital surrealism. The background is a vast, starry obsidian void. The lighting is soft but dramatic, highlighting the texture of the fabric and the glowing cosmic dust. Glassmorphism UI elements hover in the foreground." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuByXflul1HOdqaOYZ9fopNBsT3cUdchXASrhiEycCR6f4z_LV_Km3v2jcsCxWPEIJqyhtHDuVjZ88k_zsRVJZXoEBu87QEmUnBwMDgX4rl6wefIYsZiwyTa79Z-nwlNkO79cCYxCdNNNhlPbiJTJG6KfPShA3hMS3PThLrwOQCvpUDCBEuVuJMk8DBlB8pmFt_O6ffkObn4O8qOOF2v9jixkYKIk4cxRauMb3c6bwJR25vyxgVz9weT')"></div>
+<div class="absolute inset-0 bg-gradient-to-b from-surface/10 via-surface/40 to-surface"></div>
+</div>
+<div class="grid grid-cols-12 gap-grid-gutter relative z-10 items-center">
+<div class="col-span-12 md:col-span-5 md:col-start-2">
+<h1 class="font-display-lg-mobile md:font-display-lg text-on-surface leading-tight mb-6">
+<span class="text-primary-container">W</span>ho We<br>Are?
+                    </h1>
+<p class="font-body-lg text-on-surface-variant max-w-md">
+                        We redefine the standards of modeling by embracing diversity, celebrating individuality, and nurturing raw talent.
+                    </p>
+</div>
+<div class="col-span-12 md:col-span-4 md:col-start-8 mt-12 md:mt-0 glass-panel p-8 rounded-2xl border border-white/5 border-l-primary/30">
+<h3 class="font-headline-lg text-on-surface mb-4">Be a Part Of Something Great</h3>
+<button class="flex items-center gap-4 bg-surface text-on-surface border border-white/20 rounded-full px-6 py-3 font-label-caps hover:bg-primary-container hover:text-white transition-all duration-300 neon-glow w-fit">
+<span>Sign In</span>
+<div class="bg-white/10 rounded-full p-1">
+<span class="material-symbols-outlined text-[16px]">mail</span>
+</div>
+</button>
+</div>
+</div>
+<!-- Scroll Indicator -->
+<div class="absolute bottom-12 right-12 flex flex-col items-center gap-2 opacity-50 hover:opacity-100 transition-opacity animate-bounce cursor-pointer">
+<span class="material-symbols-outlined text-primary">arrow_downward</span>
+<span class="font-label-caps text-[10px]">Scroll to Explore</span>
+</div>
+</section>
+<!-- Mission Detail Section -->
+<section class="grid grid-cols-12 gap-grid-gutter mb-section-padding">
+<div class="col-span-12 md:col-span-6 md:col-start-2 relative">
+<div class="glass-panel p-12 rounded-3xl border border-white/5 border-t-primary/20 h-full flex flex-col justify-center">
+<span class="font-label-caps text-primary-container mb-4 block">01</span>
+<h2 class="font-headline-xl text-on-surface mb-6 uppercase">We're Not Just<br>A Modeling<br>Agency</h2>
+<div class="w-12 h-1 bg-gradient-to-r from-primary-container to-transparent mb-6"></div>
+<p class="font-body-md text-on-surface-variant max-w-md">
+                         We're a dynamic platform that breathes life into dreams and transforms them into reality. Whether you're breaking into industry or a seasoned pro, we provide a launchpad for your aspirations.
+                     </p>
+</div>
+</div>
+<div class="col-span-12 md:col-span-4 md:col-start-8 mt-8 md:mt-0">
+<div class="rounded-3xl overflow-hidden aspect-[4/5] relative group">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="A stylized, full-body shot of a male model in avant-garde, structural dark clothing with a flowing cape, captured in mid-stride against a vivid neon purple and deep indigo gradient background. Floating celestial orbs and subtle smoke effects surround him. The lighting is harsh and dramatic, creating a high-fashion, futuristic cyberpunk atmosphere." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAwj6fBo-oJFb63ILMfgnei7v8tqHHAkjehYvZlDq7wfqg7F1Q9GAF06OYa4AnqOs6tsR7O2pntMP7XTYTfZO8Hfq4j92rQZ2l057s3mMXfAnbeFFxCY5nSPdC6jU4yx0Ys70TkzTqYdcSjbW1_nSRmWEA65KEtefoyF43czU_eE3vDUgOfpZZkiBq00ixGOxSETsPSu3WH9Mn2v90veig3TTnfbvpg3CD9_zxJBlCEXJoN9toHWQby')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-80"></div>
+</div>
+</div>
+</section>
+<!-- Vision Section -->
+<section class="grid grid-cols-12 gap-grid-gutter relative">
+<div class="col-span-12 md:col-span-10 md:col-start-2 text-center md:text-left z-10">
+<h2 class="font-display-lg-mobile md:font-display-lg text-on-surface leading-tight">
+<span class="text-primary-container">W</span>e Believe Beauty<br>Knows No Boundaries.
+                </h2>
+</div>
+<!-- Atmospheric BG Element -->
+<div class="col-span-12 absolute -bottom-32 left-0 right-0 h-96 z-0 opacity-40 pointer-events-none flex justify-center">
+<div class="w-full max-w-2xl h-full bg-contain bg-bottom bg-no-repeat" data-alt="A close-up of a glowing, ethereal face emerging from dark purple mist. The eyes emit a bright, divine white light. The aesthetic is minimal, mysterious, and highly digital, acting as a subtle textural background element in a dark mode UI." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDLPMdMRk4nIFriUjuU2PF3cCxYAzU1XOjmJHSa2hzi9vQK6a4alf1VZ0AIt6ilsAg6sbVvRlKXjpZcdJLZbwc1HkGw7Mgf4hqmdnngVKiJELAhCiTt4oV_V6u1lqNMd5Iw1uDZcLhpGDHtl3ajqPU2cB4ddYg6QKW2UWsGFZNM-PTxGNo8VjlLcnwBMs9IYRDbpsHjZ6zuQI1MmkdX0waJgkUw5q687dHlh9inyIZV1eHSswDwedeF')"></div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 px-8 bg-background dark:bg-background border-t border-white/5 flex flex-col items-center gap-6 text-center relative z-10 mt-32">
+<div class="font-headline-lg text-on-surface mb-2">RAZE</div>
+<div class="flex gap-6 mb-4">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary underline decoration-primary/30 opacity-100 hover:opacity-80 transition-all" href="#">Privacy</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary underline decoration-primary/30 opacity-100 hover:opacity-80 transition-all" href="#">Terms</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary underline decoration-primary/30 opacity-100 hover:opacity-80 transition-all" href="#">Contact</a>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">
+            © 2024 RAZE AGENCY. ALL RIGHTS RESERVED.
+        </p>
+</footer>
+</body></html>
