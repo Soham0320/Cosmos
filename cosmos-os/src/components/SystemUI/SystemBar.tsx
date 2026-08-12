@@ -1,30 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useWindowStore } from '../../store/windowStore';
-import { HelpCircle, Bell, Search, Maximize, Battery, Wifi, Sparkles } from 'lucide-react';
-
-type MenuId = 'file' | 'edit' | 'view' | 'help' | null;
-
-interface MenuItem {
-  label: string;
-  shortcut?: string;
-  action?: () => void;
-  divider?: boolean;
-}
+import { HelpCircle, Bell, Maximize, Battery, Wifi, Sparkles } from 'lucide-react';
 
 interface SystemBarProps {
   onOpenSearch?: () => void;
 }
 
-export const SystemBar: React.FC<SystemBarProps> = ({ onOpenSearch }) => {
+export const SystemBar: React.FC<SystemBarProps> = ({ onOpenSearch: _onOpenSearch }) => {
   const [time, setTime] = useState(new Date());
-  const [openMenu, setOpenMenu] = useState<MenuId>(null);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [showAbout, setShowAbout] = useState(false);
+  const [helpTab, setHelpTab] = useState<'shortcuts' | 'tips' | 'about'>('shortcuts');
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([
     { id: 1, icon: '🚀', title: 'System Update Installed', desc: 'COSMOS OS has been updated to Build 2026.08. New AI features added.', time: 'Just now' },
     { id: 2, icon: '🤖', title: 'AI Assistant Ready', desc: 'Your personal COSMOS AI is now configured and ready to assist you.', time: '2 mins ago' }
   ]);
-  const { openWindow } = useWindowStore();
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -44,43 +34,6 @@ export const SystemBar: React.FC<SystemBarProps> = ({ onOpenSearch }) => {
     return () => document.removeEventListener('mousedown', handler);
   }, [openMenu]);
 
-  const toggleMenu = (id: MenuId) => setOpenMenu(prev => prev === id ? null : id);
-
-  const menus: Record<string, MenuItem[]> = {
-    file: [
-      { label: 'Open File Explorer', action: () => { openWindow('file-explorer'); setOpenMenu(null); } },
-      { label: 'Open Terminal',       action: () => { openWindow('terminal');      setOpenMenu(null); } },
-      { divider: true, label: '' },
-      { label: 'Settings',            action: () => { openWindow('settings');      setOpenMenu(null); } },
-    ],
-    edit: [
-      { label: 'Cut',   shortcut: '⌘X', action: () => { document.execCommand('cut');   setOpenMenu(null); } },
-      { label: 'Copy',  shortcut: '⌘C', action: () => { document.execCommand('copy');  setOpenMenu(null); } },
-      { label: 'Paste', shortcut: '⌘V', action: async () => {
-          try {
-            const text = await navigator.clipboard.readText();
-            document.execCommand('insertText', false, text);
-          } catch { /* clipboard permission denied */ }
-          setOpenMenu(null);
-        }
-      },
-    ],
-    view: [
-      {
-        label: 'Toggle Fullscreen',
-        shortcut: 'F11',
-        action: () => {
-          if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
-          else document.exitFullscreen().catch(() => {});
-          setOpenMenu(null);
-        }
-      },
-    ],
-    help: [
-      { label: 'About COSMOS OS', action: () => { setShowAbout(true); setOpenMenu(null); } },
-      { label: 'Keyboard Shortcuts', action: () => setOpenMenu(null) },
-    ],
-  };
 
   return (
     <>
@@ -108,7 +61,13 @@ export const SystemBar: React.FC<SystemBarProps> = ({ onOpenSearch }) => {
 
         {/* Right side */}
         <div className="flex gap-5 items-center h-full text-white/60 px-2 relative">
-          <button className="hover:text-white transition-colors" onClick={() => setShowAbout(true)}><HelpCircle size={14} strokeWidth={2} /></button>
+          <button
+            className="hover:text-white transition-colors"
+            title="Help & Keyboard Shortcuts"
+            onClick={() => { setShowAbout(true); setHelpTab('shortcuts'); setShowNotifications(false); setOpenMenu(null); }}
+          >
+            <HelpCircle size={14} strokeWidth={2} />
+          </button>
           
           <button 
             className="hover:text-white transition-colors relative"
@@ -137,34 +96,199 @@ export const SystemBar: React.FC<SystemBarProps> = ({ onOpenSearch }) => {
         </div>
       </div>
 
-      {/* About / Help modal */}
+
+      {/* ── Help Center modal ── */}
       {showAbout && (
-        <div className="absolute inset-0 z-[500] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-[#111] border border-white/10 rounded-2xl p-8 w-80 shadow-2xl text-center text-white flex flex-col items-center">
-            <div className="text-5xl mb-4">🌌</div>
-            <h2 className="text-2xl font-bold text-[#3b82f6] tracking-wide mb-1">COSMOS OS</h2>
-            <p className="text-white/50 text-xs mb-4">Version 1.0.0 — Build 2026.08</p>
-            
-            <div className="w-full bg-white/5 rounded-xl p-4 mb-6 text-left border border-white/10">
-              <h3 className="text-white/80 font-semibold mb-3 text-sm">Keyboard Shortcuts</h3>
-              <ul className="space-y-2 text-xs text-white/60">
-                <li className="flex justify-between"><span>🔍 Spotlight Search</span> <span className="text-white/40 font-mono bg-white/10 px-1.5 py-0.5 rounded">Ctrl + Space</span></li>
-                <li className="flex justify-between"><span>💻 Terminal</span> <span className="text-white/40 font-mono bg-white/10 px-1.5 py-0.5 rounded">Alt + T</span></li>
-                <li className="flex justify-between"><span>⚙️ Settings</span> <span className="text-white/40 font-mono bg-white/10 px-1.5 py-0.5 rounded">Alt + S</span></li>
-                <li className="flex justify-between"><span>📁 Files</span> <span className="text-white/40 font-mono bg-white/10 px-1.5 py-0.5 rounded">Alt + F</span></li>
-                <li className="flex justify-between"><span>🎵 Music</span> <span className="text-white/40 font-mono bg-white/10 px-1.5 py-0.5 rounded">Alt + M</span></li>
-              </ul>
+        <div
+          className="absolute inset-0 z-[500] flex items-center justify-center bg-black/60 backdrop-blur-sm"
+          onClick={() => setShowAbout(false)}
+        >
+          <div
+            className="bg-[#12131f] border border-white/10 rounded-2xl shadow-2xl text-white flex overflow-hidden"
+            style={{ width: 600, maxHeight: '82vh' }}
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Sidebar tabs */}
+            <div className="w-40 flex-shrink-0 bg-white/[0.03] border-r border-white/5 flex flex-col py-4 gap-1">
+              <div className="px-4 pb-3 flex items-center gap-2 border-b border-white/5 mb-1">
+                <div className="w-6 h-6 bg-[#3b82f6] rounded-lg flex items-center justify-center shadow-[0_0_10px_rgba(59,130,246,0.4)]">
+                  <Sparkles size={12} className="text-white" fill="white" />
+                </div>
+                <span className="text-xs font-bold tracking-widest text-white/80">HELP</span>
+              </div>
+              {([
+                { id: 'shortcuts', label: 'Shortcuts', icon: '⌨️' },
+                { id: 'tips',      label: 'Tips',      icon: '💡' },
+                { id: 'about',     label: 'About',     icon: '🌌' },
+              ] as const).map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setHelpTab(tab.id)}
+                  className={`flex items-center gap-2.5 mx-2 px-3 py-2 rounded-lg text-sm transition-all text-left ${
+                    helpTab === tab.id
+                      ? 'bg-[#3b82f6]/20 text-[#60a5fa] font-semibold'
+                      : 'text-white/40 hover:text-white/70 hover:bg-white/5'
+                  }`}
+                >
+                  <span>{tab.icon}</span>
+                  <span>{tab.label}</span>
+                </button>
+              ))}
             </div>
 
-            <button
-              onClick={() => setShowAbout(false)}
-              className="px-8 py-2 rounded-lg bg-[#3b82f6] text-white font-semibold hover:bg-blue-400 transition-all shadow-lg"
-            >
-              Close
-            </button>
+            {/* Main content */}
+            <div className="flex-1 flex flex-col overflow-hidden">
+              {/* Header */}
+              <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 flex-shrink-0">
+                <div>
+                  <h2 className="text-sm font-bold text-white">
+                    {helpTab === 'shortcuts' && 'Keyboard Shortcuts'}
+                    {helpTab === 'tips'      && 'Tips & Tricks'}
+                    {helpTab === 'about'     && 'About COSMOS OS'}
+                  </h2>
+                  <p className="text-[10px] text-white/30 mt-0.5">
+                    {helpTab === 'shortcuts' && 'Global hotkeys available anywhere on the desktop'}
+                    {helpTab === 'tips'      && 'Power-user features to get the most out of COSMOS'}
+                    {helpTab === 'about'     && 'System information and version details'}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowAbout(false)}
+                  className="w-7 h-7 rounded-full bg-white/5 hover:bg-red-500/20 flex items-center justify-center text-white/40 hover:text-red-400 transition-all text-xs"
+                >✕</button>
+              </div>
+
+              {/* Scrollable body */}
+              <div className="flex-1 overflow-y-auto p-5">
+
+                {/* ── Shortcuts ── */}
+                {helpTab === 'shortcuts' && (
+                  <div className="space-y-4">
+                    {[
+                      {
+                        section: 'System',
+                        items: [
+                          { action: 'Spotlight Search',  keys: ['Ctrl', 'Space'], icon: '🔍' },
+                          { action: 'Toggle Fullscreen', keys: ['F11'],           icon: '⛶'  },
+                        ],
+                      },
+                      {
+                        section: 'Open Apps',
+                        items: [
+                          { action: 'Terminal',       keys: ['Alt', 'T'], icon: '💻' },
+                          { action: 'Settings',       keys: ['Alt', 'S'], icon: '⚙️' },
+                          { action: 'File Explorer',  keys: ['Alt', 'F'], icon: '📁' },
+                          { action: 'Music Player',   keys: ['Alt', 'M'], icon: '🎵' },
+                        ],
+                      },
+                      {
+                        section: 'Window Management',
+                        items: [
+                          { action: 'Minimize Window',     keys: ['Yellow ●'], icon: '🟡' },
+                          { action: 'Maximize / Restore',  keys: ['Green ●'],  icon: '🟢' },
+                          { action: 'Close Window',        keys: ['Red ●'],    icon: '🔴' },
+                          { action: 'Snap Left / Right',   keys: ['Drag → edge'], icon: '↔️' },
+                          { action: 'Maximize by Drag',    keys: ['Drag → top'],  icon: '⬆️' },
+                          { action: 'Resize Window',       keys: ['Drag edge handle'], icon: '⤡' },
+                        ],
+                      },
+                    ].map(group => (
+                      <div key={group.section}>
+                        <div className="text-[10px] font-bold uppercase tracking-widest text-white/20 mb-2 px-1">{group.section}</div>
+                        <div className="bg-white/[0.03] border border-white/5 rounded-xl overflow-hidden">
+                          {group.items.map((item, idx) => (
+                            <div
+                              key={item.action}
+                              className={`flex items-center justify-between px-4 py-2.5 hover:bg-white/[0.04] transition-colors ${
+                                idx < group.items.length - 1 ? 'border-b border-white/5' : ''
+                              }`}
+                            >
+                              <div className="flex items-center gap-2.5">
+                                <span className="text-base w-6 text-center">{item.icon}</span>
+                                <span className="text-sm text-white/70">{item.action}</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                {item.keys.map((k, ki) => (
+                                  <React.Fragment key={k}>
+                                    {ki > 0 && <span className="text-white/20 text-[10px] mx-0.5">+</span>}
+                                    <kbd className="px-2 py-0.5 bg-white/8 border border-white/10 rounded text-[11px] font-mono text-white/50">{k}</kbd>
+                                  </React.Fragment>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* ── Tips ── */}
+                {helpTab === 'tips' && (
+                  <div className="space-y-2.5">
+                    {[
+                      { icon: '🖱️', title: 'Double-click to open',      desc: 'Double-click any desktop icon or file in the Explorer to open the app or enter a folder.' },
+                      { icon: '📌', title: 'Right-click context menus',  desc: 'Right-click the desktop or any file/folder for quick actions: Open, Rename, Delete, New Folder, Add Widget.' },
+                      { icon: '🔍', title: 'Spotlight Search',           desc: 'Press Ctrl + Space anywhere to instantly search apps and widgets. Arrow keys navigate, Enter opens.' },
+                      { icon: '🪟', title: 'Window edge snapping',       desc: 'Drag a window to the left or right screen edge to snap it to half the screen. Drag to the top bar to maximize.' },
+                      { icon: '🧩', title: 'Desktop widgets',            desc: 'Right-click the desktop → "Add Widget…" to place a Clock, Calendar, or Weather widget. Drag to reposition anytime.' },
+                      { icon: '🎵', title: 'Drop music files',           desc: 'Drag any MP3, WAV, FLAC, or OGG file directly onto the Music Player window to add it to the queue and play instantly.' },
+                      { icon: '⚙️', title: 'Personalise COSMOS',        desc: 'Open Settings (Alt + S) to change wallpaper, accent colour, and system theme to match your style.' },
+                      { icon: '🤖', title: 'COSMOS AI assistant',        desc: 'The AI Chat widget on your desktop is always ready. Open the full AI Chat app from the Dock for a larger experience.' },
+                      { icon: '📂', title: 'File Explorer tips',         desc: 'Switch between Grid and List views using the toggle buttons in the toolbar. Right-click files for Rename and Delete.' },
+                      { icon: '📋', title: 'Notes app',                  desc: 'The Notes app supports multiple notes with Markdown-style formatting. Your notes are saved automatically.' },
+                    ].map(tip => (
+                      <div key={tip.title} className="flex gap-3 p-3.5 bg-white/[0.03] border border-white/5 rounded-xl hover:bg-white/[0.05] transition-colors">
+                        <span className="text-2xl flex-shrink-0 mt-0.5">{tip.icon}</span>
+                        <div>
+                          <div className="text-sm font-semibold text-white/80 mb-0.5">{tip.title}</div>
+                          <div className="text-xs text-white/40 leading-relaxed">{tip.desc}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* ── About ── */}
+                {helpTab === 'about' && (
+                  <div className="space-y-4">
+                    <div className="flex flex-col items-center py-4 gap-3">
+                      <div className="w-16 h-16 bg-[#3b82f6] rounded-2xl flex items-center justify-center shadow-[0_0_30px_rgba(59,130,246,0.4)]">
+                        <Sparkles size={32} className="text-white" fill="white" />
+                      </div>
+                      <div className="text-center">
+                        <h3 className="text-xl font-extrabold tracking-widest text-white">COSMOS OS</h3>
+                        <p className="text-xs text-[#38bdf8] tracking-widest uppercase mt-0.5">Operating System</p>
+                      </div>
+                    </div>
+
+                    <div className="bg-white/[0.03] border border-white/5 rounded-xl overflow-hidden">
+                      {[
+                        { label: 'Version',    value: '1.0.0' },
+                        { label: 'Build',      value: '2026.08' },
+                        { label: 'Platform',   value: 'Web · React + Vite' },
+                        { label: 'UI Engine',  value: 'Tailwind CSS + Framer Motion' },
+                        { label: 'Released',   value: 'August 2026' },
+                      ].map((row, i, arr) => (
+                        <div key={row.label} className={`flex justify-between px-4 py-2.5 text-sm ${i < arr.length - 1 ? 'border-b border-white/5' : ''}`}>
+                          <span className="text-white/40">{row.label}</span>
+                          <span className="text-white/70 font-medium">{row.value}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <p className="text-center text-[11px] text-white/20 leading-relaxed pb-2">
+                      Built with ❤️ — COSMOS OS is a browser-based desktop environment<br />running entirely in your browser with no installation required.
+                    </p>
+                  </div>
+                )}
+
+              </div>
+            </div>
           </div>
         </div>
       )}
+
 
       {/* Notifications Panel */}
       {showNotifications && (

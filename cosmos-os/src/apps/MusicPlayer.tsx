@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 interface Track {
   title: string;
@@ -6,6 +6,8 @@ interface Track {
   url: string;
   color: string;
   emoji: string;
+  isUserFile?: boolean;
+  blobUrl?: string;
 }
 
 const TRACKS: Track[] = [
@@ -39,32 +41,53 @@ const TRACKS: Track[] = [
   },
 ];
 
+const USER_COLORS = ['#f472b6', '#34d399', '#60a5fa', '#fbbf24', '#a78bfa', '#fb923c', '#38bdf8'];
+const USER_EMOJIS = ['🎶', '🎸', '🥁', '🎹', '🎺', '🎻', '🪗'];
+
+function parseAudioFileName(filename: string): { title: string; artist: string } {
+  const base = filename.replace(/\.[^/.]+$/, '');
+  const dashIdx = base.indexOf(' - ');
+  if (dashIdx !== -1) {
+    return { artist: base.slice(0, dashIdx).trim(), title: base.slice(dashIdx + 3).trim() };
+  }
+  return { title: base, artist: 'Unknown Artist' };
+}
+
 export const MusicPlayer: React.FC = () => {
+  const [tracks, setTracks] = useState<Track[]>(TRACKS);
   const [trackIdx, setTrackIdx] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [volume, setVolume] = useState(0.5);
+  const [isDraggingOver, setIsDraggingOver] = useState(false);
+  const dragCounterRef = useRef(0);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animFrameRef = useRef<number>(0);
-  
   const audioCtxRef = useRef<AudioContext | null>(null);
   const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const blobUrlsRef = useRef<string[]>([]);
 
-  const track = TRACKS[trackIdx];
+  const track = tracks[trackIdx];
 
-  // Sync volume state to audio element
+  // Cleanup blob URLs on unmount
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume;
-    }
+    return () => {
+      blobUrlsRef.current.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, []);
+
+  // Sync volume
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.volume = volume;
   }, [volume]);
 
-  // Sync play/pause state
+  // Sync play/pause
   useEffect(() => {
     if (!audioRef.current) return;
     if (playing) {
@@ -77,7 +100,7 @@ export const MusicPlayer: React.FC = () => {
     }
   }, [playing, trackIdx]);
 
-  // Set up Visualizer
+  // Visualizer
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -90,25 +113,21 @@ export const MusicPlayer: React.FC = () => {
         const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
         const ctx = new AudioContextClass();
         audioCtxRef.current = ctx;
-
         const analyser = ctx.createAnalyser();
         analyser.fftSize = 64;
         analyserRef.current = analyser;
-
         const source = ctx.createMediaElementSource(audioRef.current);
         source.connect(analyser);
         analyser.connect(ctx.destination);
         sourceRef.current = source;
       } catch (err) {
-        console.warn('Web Audio API Visualizer Setup failed (likely CORS or browser policy):', err);
+        console.warn('Web Audio API setup failed:', err);
       }
     };
 
     if (playing) {
       setupWebAudio();
-      if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
-        audioCtxRef.current.resume();
-      }
+      if (audioCtxRef.current?.state === 'suspended') audioCtxRef.current.resume();
     }
 
     const bufferLength = analyserRef.current ? analyserRef.current.frequencyBinCount : 32;
@@ -118,14 +137,11 @@ export const MusicPlayer: React.FC = () => {
     const draw = () => {
       if (!canvas) return;
       animFrameRef.current = requestAnimationFrame(draw);
-
       ctx2d.clearRect(0, 0, canvas.width, canvas.height);
-
       if (playing) {
         if (analyserRef.current) {
           analyserRef.current.getByteFrequencyData(dataArray);
         } else {
-          // CORS/AudioContext Fallback: Simulate active sound frequency waves
           for (let i = 0; i < bufferLength; i++) {
             simulatedWave[i] += (Math.random() - 0.5) * 20;
             simulatedWave[i] = Math.max(10, Math.min(220, simulatedWave[i] + (i % 2 === 0 ? 3 : -3)));
@@ -135,55 +151,111 @@ export const MusicPlayer: React.FC = () => {
       } else {
         dataArray.fill(0);
       }
-
       const barWidth = (canvas.width / bufferLength) * 1.5;
       let x = 0;
-
       for (let i = 0; i < bufferLength; i++) {
         const value = dataArray[i] / 255;
         const barHeight = value * canvas.height * 0.95;
         const alpha = 0.2 + value * 0.8;
-
         ctx2d.fillStyle = track.color + Math.floor(alpha * 255).toString(16).padStart(2, '0');
         ctx2d.fillRect(x, canvas.height - barHeight, barWidth - 1.5, barHeight);
         x += barWidth;
       }
     };
-
     draw();
+    return () => { if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current); };
+  }, [playing, trackIdx, track.color]);
 
-    return () => {
-      if (animFrameRef.current) {
-        cancelAnimationFrame(animFrameRef.current);
-      }
-    };
-  }, [playing, trackIdx]);
+  // ─── File loading logic ────────────────────────────────────────────────────
 
-  const togglePlay = () => {
-    setPlaying(!playing);
-  };
+  const loadAudioFiles = useCallback((files: FileList | File[]) => {
+    const audioFiles = Array.from(files).filter(f => f.type.startsWith('audio/') || /\.(mp3|wav|ogg|flac|aac|m4a|opus)$/i.test(f.name));
+    if (audioFiles.length === 0) return;
 
-  const handleNext = () => {
-    setTrackIdx(prev => (prev + 1) % TRACKS.length);
-  };
+    const newTracks: Track[] = audioFiles.map((file, idx) => {
+      const blobUrl = URL.createObjectURL(file);
+      blobUrlsRef.current.push(blobUrl);
+      const { title, artist } = parseAudioFileName(file.name);
+      const colorIdx = (tracks.length + idx) % USER_COLORS.length;
+      return {
+        title,
+        artist,
+        url: blobUrl,
+        blobUrl,
+        color: USER_COLORS[colorIdx],
+        emoji: USER_EMOJIS[colorIdx % USER_EMOJIS.length],
+        isUserFile: true,
+      };
+    });
 
-  const handlePrev = () => {
-    setTrackIdx(prev => (prev - 1 + TRACKS.length) % TRACKS.length);
-  };
+    setTracks(prev => {
+      const combined = [...prev, ...newTracks];
+      // Switch to first new track and start playing
+      setTimeout(() => {
+        setTrackIdx(prev.length);
+        setPlaying(true);
+      }, 50);
+      return combined;
+    });
+  }, [tracks.length]);
+
+  // ─── Drag and Drop handlers ────────────────────────────────────────────────
+
+  const handleDragEnter = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounterRef.current += 1;
+    setIsDraggingOver(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounterRef.current -= 1;
+    if (dragCounterRef.current <= 0) {
+      dragCounterRef.current = 0;
+      setIsDraggingOver(false);
+    }
+  }, []);
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.dataTransfer.dropEffect = 'copy';
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingOver(false);
+    dragCounterRef.current = 0;
+    loadAudioFiles(e.dataTransfer.files);
+  }, [loadAudioFiles]);
+
+  // ─── File input handler ────────────────────────────────────────────────────
+
+  const handleFileInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      loadAudioFiles(e.target.files);
+      e.target.value = ''; // allow re-selecting same file
+    }
+  }, [loadAudioFiles]);
+
+  // ─── Playback helpers ──────────────────────────────────────────────────────
+
+  const togglePlay = () => setPlaying(p => !p);
+  const handleNext = () => setTrackIdx(prev => (prev + 1) % tracks.length);
+  const handlePrev = () => setTrackIdx(prev => (prev - 1 + tracks.length) % tracks.length);
 
   const seek = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!audioRef.current || !duration) return;
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const pct = x / rect.width;
-    audioRef.current.currentTime = pct * duration;
+    audioRef.current.currentTime = ((e.clientX - rect.left) / rect.width) * duration;
   };
 
   const handleVolumeChange = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const vol = Math.max(0, Math.min(1, x / rect.width));
-    setVolume(vol);
+    setVolume(Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)));
   };
 
   const formatTime = (secs: number) => {
@@ -202,12 +274,28 @@ export const MusicPlayer: React.FC = () => {
   };
 
   const handleLoadedMetadata = () => {
-    if (!audioRef.current) return;
-    setDuration(audioRef.current.duration);
+    if (audioRef.current) setDuration(audioRef.current.duration);
+  };
+
+  const removeUserTrack = (idx: number) => {
+    setTracks(prev => {
+      const t = prev[idx];
+      if (t.blobUrl) URL.revokeObjectURL(t.blobUrl);
+      const next = prev.filter((_, i) => i !== idx);
+      if (trackIdx >= next.length) setTrackIdx(Math.max(0, next.length - 1));
+      else if (trackIdx === idx) setTrackIdx(Math.max(0, idx - 1));
+      return next;
+    });
   };
 
   return (
-    <div className="w-full h-full bg-[#0a0a0a] text-white flex flex-col overflow-hidden">
+    <div
+      className="w-full h-full bg-[#0a0a0a] text-white flex flex-col overflow-hidden relative"
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+    >
       {/* Hidden audio element */}
       <audio
         ref={audioRef}
@@ -218,9 +306,42 @@ export const MusicPlayer: React.FC = () => {
         onEnded={handleNext}
       />
 
-      {/* Top section with album art and controls */}
-      <div className="flex-1 flex flex-col items-center justify-center p-6 gap-4 relative">
-        {/* Visualizer canvas background */}
+      {/* Hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="audio/*,.mp3,.wav,.ogg,.flac,.aac,.m4a,.opus"
+        multiple
+        className="hidden"
+        onChange={handleFileInputChange}
+      />
+
+      {/* ── Drag-over overlay ── */}
+      {isDraggingOver && (
+        <div
+          className="absolute inset-0 z-50 flex flex-col items-center justify-center gap-4 pointer-events-none"
+          style={{
+            background: `${track.color}18`,
+            border: `2px dashed ${track.color}`,
+            borderRadius: '0px',
+          }}
+        >
+          <div
+            className="text-6xl"
+            style={{ filter: `drop-shadow(0 0 20px ${track.color})`, animation: 'bounce 1s ease-in-out infinite' }}
+          >
+            🎵
+          </div>
+          <div className="text-lg font-bold" style={{ color: track.color }}>
+            Drop audio files to play
+          </div>
+          <div className="text-xs text-white/40">Supports MP3, WAV, OGG, FLAC, AAC, M4A</div>
+        </div>
+      )}
+
+      {/* Top section */}
+      <div className="flex-1 flex flex-col items-center justify-center p-6 gap-4 relative min-h-0">
+        {/* Visualizer canvas */}
         <canvas
           ref={canvasRef}
           width={400}
@@ -229,7 +350,31 @@ export const MusicPlayer: React.FC = () => {
           style={{ width: '100%', maxWidth: 420 }}
         />
 
-        {/* Album Art - spinning disc */}
+        {/* Open File button — top right */}
+        <button
+          id="music-open-file"
+          onClick={() => fileInputRef.current?.click()}
+          title="Open audio file(s)"
+          className="absolute top-3 right-3 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all hover:scale-105 active:scale-95"
+          style={{
+            background: `${track.color}22`,
+            border: `1px solid ${track.color}44`,
+            color: track.color,
+          }}
+        >
+          <span>📂</span>
+          <span>Open File</span>
+        </button>
+
+        {/* Drag hint — shown when no user tracks loaded */}
+        {!tracks.some(t => t.isUserFile) && (
+          <div className="absolute top-3 left-3 z-10 flex items-center gap-1 text-[10px] text-white/20 pointer-events-none">
+            <span>⬆</span>
+            <span>Drag MP3 here</span>
+          </div>
+        )}
+
+        {/* Album Art */}
         <div className="relative">
           <div
             className="w-40 h-40 rounded-full flex items-center justify-center border-4 border-white/5 transition-all duration-500 relative"
@@ -241,17 +386,13 @@ export const MusicPlayer: React.FC = () => {
                 : `0 0 20px ${track.color}15`,
             }}
           >
-            {/* Inner ring */}
             <div className="w-20 h-20 rounded-full bg-[#0a0a0a] border-2 border-white/10 flex items-center justify-center relative z-10">
               <div className="w-4 h-4 rounded-full" style={{ background: track.color, boxShadow: `0 0 12px ${track.color}` }} />
             </div>
-            {/* Grooves */}
             <div className="absolute inset-4 rounded-full border border-white/5" />
             <div className="absolute inset-8 rounded-full border border-white/5" />
             <div className="absolute inset-12 rounded-full border border-white/5" />
           </div>
-
-          {/* Floating emoji */}
           <span
             className="absolute -top-2 -right-2 text-3xl"
             style={{
@@ -265,17 +406,19 @@ export const MusicPlayer: React.FC = () => {
 
         {/* Track info */}
         <div className="text-center z-10">
-          <h2 className="text-lg font-bold" style={{ color: track.color }}>{track.title}</h2>
+          <h2 className="text-lg font-bold truncate max-w-[260px]" style={{ color: track.color }}>{track.title}</h2>
           <p className="text-white/40 text-xs mt-0.5">{track.artist}</p>
+          {track.isUserFile && (
+            <span className="inline-block mt-1 text-[9px] px-1.5 py-0.5 rounded-full uppercase tracking-wider font-bold"
+              style={{ background: `${track.color}22`, color: track.color }}>
+              Local File
+            </span>
+          )}
         </div>
 
         {/* Controls */}
         <div className="flex items-center gap-6 z-10">
-          <button
-            id="music-shuffle"
-            className="text-white/30 hover:text-white/70 transition-colors text-sm"
-            title="Shuffle"
-          >🔀</button>
+          <button id="music-shuffle" className="text-white/30 hover:text-white/70 transition-colors text-sm" title="Shuffle">🔀</button>
           <button
             id="music-prev"
             onClick={handlePrev}
@@ -300,11 +443,7 @@ export const MusicPlayer: React.FC = () => {
             className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-lg transition-all active:scale-90"
             title="Next"
           >⏭</button>
-          <button
-            id="music-repeat"
-            className="text-white/30 hover:text-white/70 transition-colors text-sm"
-            title="Repeat"
-          >🔁</button>
+          <button id="music-repeat" className="text-white/30 hover:text-white/70 transition-colors text-sm" title="Repeat">🔁</button>
         </div>
 
         {/* Progress bar */}
@@ -337,16 +476,10 @@ export const MusicPlayer: React.FC = () => {
         {/* Volume control */}
         <div className="flex items-center gap-2 z-10 w-full max-w-[180px]">
           <span className="text-xs text-white/30">🔈</span>
-          <div
-            className="flex-1 h-1 bg-white/10 rounded-full cursor-pointer relative group"
-            onClick={handleVolumeChange}
-          >
+          <div className="flex-1 h-1 bg-white/10 rounded-full cursor-pointer relative group" onClick={handleVolumeChange}>
             <div
               className="h-full rounded-full transition-all"
-              style={{
-                width: `${volume * 100}%`,
-                background: `linear-gradient(90deg, ${track.color}66, ${track.color})`,
-              }}
+              style={{ width: `${volume * 100}%`, background: `linear-gradient(90deg, ${track.color}66, ${track.color})` }}
             >
               <div
                 className="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
@@ -358,24 +491,28 @@ export const MusicPlayer: React.FC = () => {
         </div>
       </div>
 
-      {/* Track list */}
-      <div className="border-t border-white/5 bg-[#070707] max-h-[200px] overflow-y-auto">
-        <div className="px-3 py-2 text-[10px] font-semibold text-white/25 uppercase tracking-widest">Queue</div>
-        {TRACKS.map((t, i) => (
+      {/* Track list / Queue */}
+      <div className="border-t border-white/5 bg-[#070707] max-h-[200px] overflow-y-auto flex-shrink-0">
+        <div className="px-3 py-2 flex items-center justify-between">
+          <span className="text-[10px] font-semibold text-white/25 uppercase tracking-widest">Queue ({tracks.length})</span>
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="text-[10px] text-white/30 hover:text-white/70 transition-colors flex items-center gap-1 px-2 py-0.5 rounded hover:bg-white/5"
+            title="Add audio files"
+          >
+            <span>＋</span> Add files
+          </button>
+        </div>
+        {tracks.map((t, i) => (
           <div
-            key={t.title}
-            onClick={() => {
-              setTrackIdx(i);
-              setPlaying(true);
-            }}
-            className={`flex items-center gap-3 px-4 py-2.5 cursor-pointer transition-all ${
-              i === trackIdx
-                ? 'bg-white/5'
-                : 'hover:bg-white/[0.03]'
+            key={`${t.url}-${i}`}
+            onClick={() => { setTrackIdx(i); setPlaying(true); }}
+            className={`flex items-center gap-3 px-4 py-2.5 cursor-pointer transition-all group/item ${
+              i === trackIdx ? 'bg-white/5' : 'hover:bg-white/[0.03]'
             }`}
           >
-            {/* Track number / playing indicator */}
-            <div className="w-6 text-center">
+            {/* Playing indicator */}
+            <div className="w-6 text-center flex-shrink-0">
               {i === trackIdx && playing ? (
                 <div className="flex gap-[2px] items-end justify-center h-4">
                   {[1, 2, 3].map(b => (
@@ -395,7 +532,7 @@ export const MusicPlayer: React.FC = () => {
               )}
             </div>
 
-            <span className="text-lg">{t.emoji}</span>
+            <span className="text-lg flex-shrink-0">{t.emoji}</span>
 
             <div className="flex-1 min-w-0">
               <div
@@ -404,13 +541,33 @@ export const MusicPlayer: React.FC = () => {
               >
                 {t.title}
               </div>
-              <div className="text-[11px] text-white/30 truncate">{t.artist}</div>
+              <div className="text-[11px] text-white/30 truncate flex items-center gap-1">
+                {t.artist}
+                {t.isUserFile && <span className="text-[9px] px-1 py-0 rounded" style={{ background: `${t.color}22`, color: t.color }}>local</span>}
+              </div>
             </div>
 
-            {/* Duration */}
-            <span className="text-[10px] text-white/20 font-mono">3:30</span>
+            {/* Remove user track button */}
+            {t.isUserFile && (
+              <button
+                onClick={e => { e.stopPropagation(); removeUserTrack(i); }}
+                className="opacity-0 group-hover/item:opacity-100 transition-opacity text-white/30 hover:text-red-400 text-xs w-5 h-5 flex items-center justify-center rounded flex-shrink-0"
+                title="Remove from queue"
+              >
+                ✕
+              </button>
+            )}
           </div>
         ))}
+
+        {/* Empty state drop hint in queue */}
+        <div
+          className="flex items-center justify-center gap-2 px-4 py-3 mx-3 mb-2 rounded-lg border border-dashed border-white/10 cursor-pointer hover:border-white/20 transition-colors"
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <span className="text-white/20 text-sm">🎵</span>
+          <span className="text-[10px] text-white/20">Drop files here or click to add more songs…</span>
+        </div>
       </div>
 
       {/* CSS animations */}
